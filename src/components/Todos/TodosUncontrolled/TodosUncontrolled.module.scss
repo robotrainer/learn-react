@@ -1,0 +1,49 @@
+.todos {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 150px;
+
+  $color-primary: rgb(148, 1, 164);
+
+  h1 {
+    color: $color-primary;
+  }
+
+  .input-todo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 20px;
+    width: inherit;
+
+    input {
+      height: 48px;
+      width: inherit;
+      padding: 0 20px;
+      font-size: 36px;
+      border: 2px solid $color-primary;
+      outline: none;
+      border-radius: 15px;
+
+      &:focus {
+        outline: 2px solid $color-primary;
+      }
+    }
+
+    button {
+      background-color: $color-primary;
+      color: white;
+    }
+  }
+
+  .todos-list {
+    font-size: 32px;
+  }
+
+  .clean-todos-btn {
+    margin-left: auto;
+    background-color: rgb(255, 0, 0);
+    color: white;
+  }
+}
