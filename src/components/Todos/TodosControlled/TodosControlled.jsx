@@ -1,28 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import classes from "./TodosControlled.module.scss";
 
 import { Button } from "../../shared/Button/Button";
 import { TodosList } from "../TodosList/TodosList";
 
-const todosData = [
-  {
-    id: 1,
-    text: "дело 1",
-  },
-  {
-    id: 2,
-    text: "дело 2",
-  },
-  {
-    id: 3,
-    text: "дело 3",
-  },
-];
-
 export const TodosControlled = () => {
-  const [todos, setTodos] = useState(todosData);
+  const [todos, setTodos] = useState([]);
   const [todo, setTodo] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  const getTodos = async () => {
+    try {
+      setIsLoading(true);
+      const responce = await fetch("http://localhost:3001/todos");
+      if (!responce.ok) {
+        throw new Error(`${responce.status} ${responce.statusText}`);
+      }
+
+      const todosData = await responce.json();
+
+      setTodos(todosData);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleTodo = (e) => {
     setTodo(e.target.value);
@@ -47,7 +54,15 @@ export const TodosControlled = () => {
         <Button onClick={handleTodos}>Создать</Button>
       </div>
 
-      <TodosList className={classes.todosList} todos={todos} />
+      {!isLoading ? (
+        <TodosList className={classes.todosList} todos={todos} />
+      ) : (
+        <h1>Loading...</h1>
+      )}
+
+      {Boolean(!todos.length) && !isLoading ? (
+        <h2>Todos list are empty</h2>
+      ) : null}
 
       {Boolean(todos.length) && (
         <Button className={classes.cleanTodosBtn} onClick={cleanTodos}>
