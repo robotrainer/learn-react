@@ -5,37 +5,19 @@ import classes from "./TodosUncontrolled.module.scss";
 import { Button } from "../../shared/Button/Button";
 import { TodosList } from "../TodosList/TodosList";
 
-const todosData = [
-  {
-    id: 1,
-    text: "дело 1",
-  },
-  {
-    id: 2,
-    text: "дело 2",
-  },
-  {
-    id: 3,
-    text: "дело 3",
-  },
-];
+import useTodos from "../hooks/useTodos";
 
 export const TodosUncontrolled = () => {
-  const [todos, setTodos] = useState(todosData);
+  const { todos, addTodo, cleanTodos, isLoading, isError, error } = useTodos();
   const inputRef = useRef();
 
   const handleTodos = () => {
     const text = inputRef.current.value;
 
     if (text) {
-      setTodos((todos) => [...todos, { id: Date.now(), text }]);
-
+      addTodo(text);
       inputRef.current.value = "";
     }
-  };
-
-  const cleanTodos = () => {
-    setTodos([]);
   };
 
   return (
@@ -48,7 +30,13 @@ export const TodosUncontrolled = () => {
         </Button>
       </div>
 
-      <TodosList className={classes.todosList} todos={todos} />
+      <TodosList
+        className={classes.todosList}
+        todos={todos}
+        isLoading={isLoading}
+        isError={isError}
+        error={error}
+      />
 
       {Boolean(todos.length) && (
         <Button
