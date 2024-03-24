@@ -2,7 +2,23 @@ import React from "react";
 
 import classes from "./TodosList.module.scss";
 
-export const TodosList = ({ style, className, todos }) => {
+export const TodosList = ({
+  style,
+  className,
+  todos,
+  isLoading,
+  isError,
+  error,
+}) => {
+  if (isLoading) return <h1>Loading...</h1>;
+
+  if (isError)
+    return (
+      <p>
+        {error.name} {error.message}
+      </p>
+    );
+
   return (
     <ol
       style={{ ...style }}
