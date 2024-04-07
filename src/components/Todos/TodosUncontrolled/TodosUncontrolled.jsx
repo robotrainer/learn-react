@@ -8,7 +8,15 @@ import { TodosList } from "../TodosList/TodosList";
 import useTodos from "../hooks/useTodos";
 
 export const TodosUncontrolled = () => {
-  const { todos, addTodo, cleanTodos, isLoading, isError, error } = useTodos();
+  const {
+    todos,
+    addTodo,
+    cleanTodos,
+    changeStatusTodo,
+    isLoading,
+    isError,
+    error,
+  } = useTodos();
   const inputRef = useRef();
 
   const handleTodos = () => {
@@ -36,6 +44,7 @@ export const TodosUncontrolled = () => {
         isLoading={isLoading}
         isError={isError}
         error={error}
+        onClickTodo={changeStatusTodo}
       />
 
       {Boolean(todos.length) && (
