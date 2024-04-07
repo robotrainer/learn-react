@@ -9,6 +9,7 @@ export const TodosList = ({
   isLoading,
   isError,
   error,
+  onClickTodo,
 }) => {
   if (isLoading) return <h1>Loading...</h1>;
 
@@ -25,7 +26,18 @@ export const TodosList = ({
       className={[classes.todosList, className].filter((e) => e).join(" ")}
     >
       {todos.map((todo) => (
-        <li key={todo.id}>{todo.text}</li>
+        <li
+          key={todo.id}
+          className={[
+            classes.todo,
+            todo.completed ? classes.completed : "",
+          ].join(" ")}
+          onClick={() => {
+            onClickTodo(todo);
+          }}
+        >
+          {todo.text}
+        </li>
       ))}
     </ol>
   );
