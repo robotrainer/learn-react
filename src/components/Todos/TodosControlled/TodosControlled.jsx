@@ -2,10 +2,27 @@ import React, { useState, useEffect } from "react";
 
 import classes from "./TodosControlled.module.scss";
 
-import { Button } from "../../shared/Button/Button";
+import FilterTodo from "../FilterTodo/FilterTodo";
 import { TodosList } from "../TodosList/TodosList";
+import { Button } from "../../shared/Button/Button";
 
 import useTodos from "../hooks/useTodos";
+import useFilterTodos from "../hooks/useFilterTodos";
+
+const filterConfig = [
+  {
+    value: "all",
+    label: "Все",
+  },
+  {
+    value: "completed",
+    label: "Завершённые",
+  },
+  {
+    value: "uncompleted",
+    label: "Незавершённые",
+  },
+];
 
 export const TodosControlled = () => {
   const {
@@ -17,23 +34,10 @@ export const TodosControlled = () => {
     isError,
     error,
   } = useTodos();
+
+  const { filteredTodos, filterMode, setFilterMode } = useFilterTodos(todos);
+
   const [todo, setTodo] = useState("");
-
-  const [filterMode, setFilterMode] = useState("all");
-
-  const filteredTodos = filterTodos(filterMode);
-
-  function filterTodos(mode) {
-    switch (mode) {
-      case "completed": {
-        return todos.filter((elem) => elem.completed);
-      }
-      case "uncompleted":
-        return todos.filter((elem) => !elem.completed);
-      default:
-        return todos;
-    }
-  }
 
   return (
     <div className={classes.todos}>
@@ -54,44 +58,19 @@ export const TodosControlled = () => {
         </Button>
       </div>
 
-      <div className={classes.filter}>
-        <label className={classes.inputRadio} htmlFor="all">
-          <input
-            id="all"
-            className={classes.radio}
-            type="radio"
-            name="filter"
-            value="all"
-            checked={filterMode == "all"}
-            onChange={(e) => setFilterMode(e.target.value)}
-          />{" "}
-          Все
-        </label>
-        <label className={classes.inputRadio} htmlFor="completed">
-          <input
-            id="completed"
-            className={classes.radio}
-            type="radio"
-            name="filter"
-            value="completed"
-            checked={filterMode == "completed"}
-            onChange={(e) => setFilterMode(e.target.value)}
-          />{" "}
-          Завершённые
-        </label>
-        <label className={classes.inputRadio} htmlFor="uncompleted">
-          <input
-            id="uncompleted"
-            className={classes.radio}
-            type="radio"
-            name="filter"
-            value="uncompleted"
-            checked={filterMode == "uncompleted"}
-            onChange={(e) => setFilterMode(e.target.value)}
-          />{" "}
-          Незавершённые
-        </label>
-      </div>
+      <FilterTodo>
+        {filterConfig.map((radio) => {
+          return (
+            <FilterTodo.Radio
+              key={radio.value}
+              value={radio.value}
+              label={radio.label}
+              checked={filterMode === radio.value}
+              onChange={(e) => setFilterMode(e.target.value)}
+            />
+          );
+        })}
+      </FilterTodo>
 
       <TodosList
         className={classes.todosList}
