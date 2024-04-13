@@ -4,10 +4,8 @@
   width: 100%;
   margin-top: 150px;
 
-  $color-primary: rgb(148, 1, 164);
-
   h1 {
-    color: $color-primary;
+    color: var(--color-primary);
   }
 
   .input-todo {
@@ -22,17 +20,17 @@
       width: inherit;
       padding: 0 20px;
       font-size: 36px;
-      border: 2px solid $color-primary;
+      border: 2px solid var(--color-primary);
       outline: none;
       border-radius: 15px;
 
       &:focus {
-        outline: 2px solid $color-primary;
+        outline: 2px solid var(--color-primary);
       }
     }
 
     button {
-      background-color: $color-primary;
+      background-color: var(--color-primary);
       color: white;
     }
   }
