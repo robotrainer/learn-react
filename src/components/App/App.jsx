@@ -1,4 +1,3 @@
-import React from "react";
 import { TodosUncontrolled } from "../Todos/TodosUncontrolled/TodosUncontrolled";
 import { TodosControlled } from "../Todos/TodosControlled/TodosControlled";
 

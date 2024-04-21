@@ -5,6 +5,7 @@
 
 .app {
   display: flex;
+  flex-direction: column;
   height: inherit;
   width: auto;
   padding: 0 10vw;
