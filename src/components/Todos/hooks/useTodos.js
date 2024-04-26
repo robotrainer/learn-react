@@ -1,9 +1,55 @@
-import { useState, useEffect } from "react";
+import { useEffect, useReducer } from "react";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "get_todos": {
+      return {
+        todos: action.todos,
+        isLoading: false,
+        error: null,
+      };
+    }
+
+    case "added_todo": {
+      return {
+        todos: [...state.todos, action.todo],
+        isLoading: false,
+        error: null,
+      };
+    }
+
+    case "changed_status": {
+      return {
+        todos: state.todos.map((elem) => {
+          return elem.id === action.todoId
+            ? { ...elem, completed: !elem.completed }
+            : elem;
+        }),
+        isLoading: false,
+        error: null,
+      };
+    }
+
+    case "error": {
+      return {
+        todos: [],
+        isLoading: false,
+        error: action.error,
+      };
+    }
+  }
+
+  throw Error(`Unknown action: ${action.type}`);
+}
+
+const initState = {
+  todos: [],
+  isLoading: true,
+  error: null,
+};
 
 export default function useTodos() {
-  const [todos, setTodos] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, dispatch] = useReducer(reducer, initState);
 
   useEffect(() => {
     getTodos();
@@ -17,13 +63,13 @@ export default function useTodos() {
       }
 
       const todosData = await response.json();
-
-      setTodos(todosData);
+      dispatch({
+        type: "get_todos",
+        todos: todosData,
+      });
     } catch (error) {
       console.error(error);
-      setError(error);
-    } finally {
-      setIsLoading(false);
+      dispatch({ type: "error", error });
     }
   };
 
@@ -39,15 +85,15 @@ export default function useTodos() {
       }
 
       const data = await response.json();
-      setTodos((todos) => [...todos, data]);
+      dispatch({ type: "added_todo", todo: data });
     } catch (error) {
       console.error(error);
-      // setError(error);
+      dispatch({ type: "error", error });
     }
   };
 
   const cleanTodos = async () => {
-    setTodos([]);
+    dispatch({ type: "get_todos", todos: [] });
   };
 
   const changeStatusTodo = async (todo) => {
@@ -62,24 +108,23 @@ export default function useTodos() {
       }
 
       const data = await response.json();
-      setTodos((todos) =>
-        todos.map((elem) => {
-          return elem.id == data.id ? data : elem;
-        })
-      );
+      dispatch({
+        type: "changed_status",
+        todoId: data.id,
+      });
     } catch (error) {
       console.error(error);
-      // setError(error);
+      dispatch({ type: "error", error });
     }
   };
 
   return {
-    todos,
+    todos: data.todos,
+    isLoading: data.isLoading,
+    error: data.error,
     addTodo,
     cleanTodos,
     changeStatusTodo,
-    isLoading,
-    isError: error != null,
-    error,
+    isError: data.error != null,
   };
 }
