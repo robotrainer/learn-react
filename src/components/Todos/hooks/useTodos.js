@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import {useCallback, useEffect, useReducer } from "react";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -92,9 +92,9 @@ export default function useTodos() {
     }
   };
 
-  const cleanTodos = async () => {
+  const cleanTodos = useCallback(() => {
     dispatch({ type: "get_todos", todos: [] });
-  };
+  }, []);
 
   const changeStatusTodo = async (todo) => {
     try {
