@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function useFilterTodos(todos) {
   const [filterMode, setFilterMode] = useState("all");
 
-  const filteredTodos = filterTodos();
+  const filteredTodos = useMemo(
+    () => filterTodos(filterMode, todos),
+    [filterMode, todos]
+  );
 
-  function filterTodos() {
-    switch (filterMode) {
+  function filterTodos(mode, todos) {
+    switch (mode) {
       case "completed": {
         return todos.filter((elem) => elem.completed);
       }
