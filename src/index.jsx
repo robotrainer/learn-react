@@ -5,11 +5,15 @@ import "./index.scss";
 
 import { App } from "./components/App/App.jsx";
 
+import { ThemeProvider } from "./context/ThemeProvider.jsx";
+
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement);
 
 root.render(
   <StrictMode>
-    <App />
+    <ThemeProvider>
+      <App />
+    </ThemeProvider>
   </StrictMode>
 );
